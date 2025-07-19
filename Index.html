@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quora Clone</title>
+  <link rel="stylesheet" href="CSS/style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <img src="image.png" alt="Logo" class="logo" />
+  </header>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="Home.html">Home</a>
+    <a href="https://google.com">Student Resources</a>
+    <a href="https://google.com">Contact</a>
+    <a href="Signup.html">Signup</a>
+
+    <!-- Search bar (added search input + button) -->
+    <input type="text" id="searchInput" placeholder="Search questions..." />
+    <button onclick="handleSearch()">Search</button>
+
+    <button id="toggleLoginBtn" class="toggle-login">Toggle Login</button>
+  </nav>
+
+  <!--Questio submission form: Show error or success messages -->
+  <form id="questionForm">
+  <input type="text" id="title" placeholder="Title" required />
+  <input type="text" id="author" placeholder="Your name" required />
+  <textarea id="detail" placeholder="Enter details here..." required></textarea>
+  <button type="submit">Submit</button>
+
+  <!-- Message Box for success or error -->
+  <div id="messageBox"></div>
+</form>
+
+
+
+  <!-- Intro Section -->
+  <section id="Intro">
+    <h1>Quora Homepage</h1>
+    <p>An Academic Portal</p>
+  </section>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Left Feed -->
+    <div class="left-feed">
+      <h2>Need Support?</h2>
+      <p>Send your concern to apsara8@gmail.com.</p>
+
+      <!-- ADDED: Load Real Questions Section -->
+      <!-- This section will load questions from the backend and make them clickable -->
+      <div class="real-questions-section">
+        <h3>Recent Questions</h3>
+        <button onclick="loadRealQuestions()" class="load-questions-btn">Load Questions</button>
+        
+        <!-- Container for dynamically loaded questions -->
+        <div id="realQuestionsList" class="real-questions-container">
+          <p class="instructions">Click "Load Questions" to view recent questions from the database</p>
+        </div>
+      </div>
+
+      <!-- Dummy Question 1 -->
+      <div class="question-card">
+        <h3>What are the best resources to learn Python?</h3>
+        <div class="question-detail">
+          <p>I’m new to programming. Should I use books, YouTube, or online courses?</p>
+        </div>
+        <button class="toggle-detail">Toggle Details</button>
+        <button class="answer-btn">Answer</button>
+      </div>
+
+      <!-- Dummy Question 2 -->
+      <div class="question-card">
+        <h3>How to stay consistent while preparing for interviews?</h3>
+        <div class="question-detail">
+          <p>I struggle with consistency. Any tips for building a routine?</p>
+        </div>
+        <button class="toggle-detail">Toggle Details</button>
+        <button class="answer-btn">Answer</button>
+      </div>
+    </div>
+
+    <!-- Right Login Box -->
+    <div class="right-login" id="loginBox">
+      <h2>Login</h2>
+      <input type="text" placeholder="Email"><br />
+      <input type="password" placeholder="Password"><br />
+      <button id="loginBtn">Login</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  
+  <script>
+  function handleSearch() {
+    const query = document.getElementById('searchInput').value.trim();
+    if (query) {
+      // Redirect to a new search results page (optional: create one)
+      window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+    }
+  }
+</script>    
+
+
+<!--JavaScript Code to Handle submission and update messageBox dynamically -->
+<script>
+  const form = document.getElementById('questionForm');
+const messageBox = document.getElementById('messageBox');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault(); // prevent page reload
+
+  const title = document.getElementById('title').value.trim();
+  const detail = document.getElementById('detail').value.trim();
+  const author = document.getElementById('author').value.trim();
+
+  try {
+    const response = await fetch('http://localhost:3000/questions/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, detail, author }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      messageBox.style.color = 'green';
+      messageBox.textContent = 'Question submitted!';
+      form.reset();
+    } else {
+      messageBox.style.color = 'red';
+      messageBox.textContent = data.error || 'An error occurred.';
+    }
+  } catch (error) {
+    messageBox.style.color = 'red';
+    messageBox.textContent = 'Unable to reach server.';
+  }
+});
+</script> 
+
+<!-- ADDED: Click-to-Expand Questions Functionality -->
+<!-- This script handles loading questions from backend and making them expandable -->
+<script>
+  // Global variable to track expanded questions
+  let expandedQuestions = new Set();
+
+  // FUNCTION: Load real questions from backend
+  // Fetches all questions from GET /questions/ endpoint
+  async function loadRealQuestions() {
+    const questionsList = document.getElementById('realQuestionsList');
+    
+    try {
+      // Show loading state while fetching
+      questionsList.innerHTML = `
+        <div class="loading-state">
+          <span class="loading-spinner"></span>
+          Loading questions from database...
+        </div>
+      `;
+      
+      // Fetch all questions from backend
+      const response = await fetch('http://localhost:3000/questions/');
+      const questions = await response.json();
+      
+      if (response.ok && questions.length > 0) {
+        // Display questions with click-to-expand functionality
+        displayClickableQuestions(questions);
+      } else if (response.ok && questions.length === 0) {
+        // Handle empty state
+        questionsList.innerHTML = `
+          <div class="empty-state">
+            <p>No questions found. Submit the first question!</p>
+          </div>
+        `;
+      } else {
+        // Handle error response
+        questionsList.innerHTML = `
+          <div class="error-state">
+            <p style="color: red;">Error loading questions: ${questions.message || 'Unknown error'}</p>
+          </div>
+        `;
+      }
+    } catch (error) {
+      // Handle network errors
+      console.error('Error loading questions:', error);
+      questionsList.innerHTML = `
+        <div class="error-state">
+          <p style="color: red;">Network error: Unable to reach server</p>
+        </div>
+      `;
+    }
+  }
+
+  // FUNCTION: Display questions with click-to-expand functionality
+  // Creates clickable question cards that expand to show full details
+  function displayClickableQuestions(questions) {
+    const questionsList = document.getElementById('realQuestionsList');
+    
+    questionsList.innerHTML = questions.map(question => `
+      <!-- Real Question Card (clickable) -->
+      <div class="real-question-card" id="question-${question._id}">
+        <!-- Clickable Header - clicking here expands the question -->
+        <div class="question-header" onclick="toggleRealQuestion('${question._id}')">
+          <h4 class="clickable-title">${escapeHtml(question.title)}</h4>
+          <div class="question-meta">
+            <span class="author">by ${escapeHtml(question.author)}</span>
+            <span class="date">${formatDate(question.createdAt)}</span>
+            <span class="expand-indicator" id="indicator-${question._id}">▼</span>
+          </div>
+        </div>
+        
+        <!-- Expandable Details - hidden by default, shown when clicked -->
+        <div class="question-expanded-content" id="content-${question._id}" style="display: none;">
+          <!-- This content is loaded when user clicks to expand -->
+          <div class="loading-placeholder">
+            <span class="loading-spinner"></span>
+            Loading question details...
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // FUNCTION: Toggle question expansion (expand/collapse)
+  // Handles clicking on question titles to show/hide details
+  async function toggleRealQuestion(questionId) {
+    const questionCard = document.getElementById(`question-${questionId}`);
+    const content = document.getElementById(`content-${questionId}`);
+    const indicator = document.getElementById(`indicator-${questionId}`);
+    
+    if (expandedQuestions.has(questionId)) {
+      // COLLAPSE: Question is currently expanded, so collapse it
+      collapseQuestion(questionId, content, indicator, questionCard);
+    } else {
+      // EXPAND: Question is collapsed, so expand it and fetch details
+      await expandQuestion(questionId, content, indicator, questionCard);
+    }
+  }
+
+  // FUNCTION: Expand a question and fetch its full details
+  // Makes API call to GET /questions/:id to get complete question data
+  async function expandQuestion(questionId, content, indicator, questionCard) {
+    try {
+      // Mark as expanded and update UI
+      expandedQuestions.add(questionId);
+      questionCard.classList.add('expanded');
+      indicator.textContent = '▲';
+      content.style.display = 'block';
+      
+      // Show loading state while fetching details
+      content.innerHTML = `
+        <div class="loading-question-details">
+          <span class="loading-spinner"></span>
+          Loading question details...
+        </div>
+      `;
+      // Fetch detailed question data from backend
+      const response = await fetch(`http://localhost:3000/questions/${questionId}`);
+      const questionData = await response.json();
+      
+      if (response.ok) {
+        // SUCCESS: Display full question details
+        content.innerHTML = `
+          <div class="expanded-question-content">
+            <div class="full-detail">
+              <h5>Full Question:</h5>
+              <p>${escapeHtml(questionData.detail)}</p>
+            </div>
+            
+            <div class="question-info-grid">
+              <div class="info-item">
+                <strong>Author:</strong> ${escapeHtml(questionData.author)}
+              </div>
+              <div class="info-item">
+                <strong>Created:</strong> ${formatDate(questionData.createdAt)}
+              </div>
+              <div class="info-item">
+                <strong>ID:</strong> ${questionData._id}
+              </div>
+              <div class="info-item">
+                <strong>Tags:</strong> ${questionData.tags?.length ? questionData.tags.join(', ') : 'No tags'}
+              </div>
+            </div>
+            
+            <div class="question-actions">
+              <button onclick="collapseQuestion('${questionId}')" class="collapse-btn">
+                ▲ Collapse
+              </button>
+              <button onclick="shareQuestion('${questionId}')" class="share-btn">
+                🔗 Share
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        // ERROR: Show error message
+        content.innerHTML = `
+          <div class="question-error">
+            <p style="color: red;">Error loading details: ${questionData.error}</p>
+          </div>
+        `;
+      }
+    } catch (error) {
+      // NETWORK ERROR: Show network error message
+      console.error('Error fetching question details:', error);
+      content.innerHTML = `
+        <div class="question-error">
+          <p style="color: red;">Network error: Unable to load question details</p>
+        </div>
+      `;
+    }
+  }
+
+  // FUNCTION: Collapse a question (hide details)
+  // Closes the expanded question and resets UI state
+  function collapseQuestion(questionId, content, indicator, questionCard) {
+    // Update state and UI
+    expandedQuestions.delete(questionId);
+    
+    // Get elements if not provided (for button click)
+    if (!content) {
+      content = document.getElementById(`content-${questionId}`);
+      indicator = document.getElementById(`indicator-${questionId}`);
+      questionCard = document.getElementById(`question-${questionId}`);
+    }
+    
+    // Reset UI state
+    questionCard.classList.remove('expanded');
+    indicator.textContent = '▼';
+    content.style.display = 'none';
+    content.innerHTML = '';
+  }
+
+  // UTILITY FUNCTION: Escape HTML to prevent XSS attacks
+  // Sanitizes user input before displaying in HTML
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  // UTILITY FUNCTION: Format dates for display
+  // Converts ISO date strings to readable format
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  }
+
+  // UTILITY FUNCTION: Share question (placeholder)
+  // Handles sharing functionality (can be extended later)
+  function shareQuestion(questionId) {
+    const url = `${window.location.origin}/question/${questionId}`;
+    navigator.clipboard.writeText(url).then(() => {
+      alert('Question link copied to clipboard!');
+    }).catch(() => {
+      alert(`Share this question: ${url}`);
+    });
+  }
+
+  // AUTO-LOAD: Load questions when page loads
+  // Automatically fetch and display questions when the page is ready
+  document.addEventListener('DOMContentLoaded', function() {
+    // Small delay to ensure all elements are ready
+    setTimeout(() => {
+      loadRealQuestions();
+    }, 500);
+  });
+</script>
+
+
+</body>
+</html>

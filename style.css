@@ -1,0 +1,473 @@
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+/* Logo */
+.logo {
+  width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+/* Navigation Bar */
+.navbar {
+  position: sticky;
+  top: 0;
+  background-color: #b92b27;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+  flex-wrap: wrap;
+  z-index: 10;
+}
+.navbar a {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+.navbar a:hover {
+  color: #ffeeba;
+}
+.navbar input[type="text"]{
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  flex: 1;
+}
+.navbar button {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.navbar button:hover {
+  background-color: #0056b3;
+}
+
+
+.toggle-login {
+  background-color: white;
+  color: #b92b27;
+  font-weight: bold;
+  border: 2px solid white;
+  border-radius: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.toggle-login:hover {
+  background-color: #ffeeba;
+  color: #b92b27;
+}
+
+/* Intro Section */
+#Intro {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+#Intro h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+#Intro p {
+  color: #777;
+}
+
+/* Main Content Layout */
+.main-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Left Feed */
+.left-feed {
+  flex: 2;
+  min-width: 300px;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* ADDED: Real Questions Section Styles */
+/* Styles for the new click-to-expand questions functionality */
+.real-questions-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+.real-questions-section h3 {
+  color: #b92b27;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+/* Load Questions Button */
+.load-questions-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.load-questions-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Real Questions Container */
+.real-questions-container {
+  margin-top: 1rem;
+}
+
+/* Individual Real Question Card (Clickable) */
+.real-question-card {
+  background-color: #ffffff;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.real-question-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+/* Question Header (Clickable Area) */
+.question-header {
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.question-header:hover {
+  background-color: #f8f9fa;
+}
+
+/* Clickable Question Title */
+.clickable-title {
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.question-header:hover .clickable-title {
+  color: #b92b27;
+}
+
+/* Question Meta Information */
+.question-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.question-meta .author {
+  font-weight: 500;
+  color: #007bff;
+}
+
+.question-meta .date {
+  font-style: italic;
+}
+
+/* Expand/Collapse Indicator */
+.expand-indicator {
+  font-size: 1.2rem;
+  color: #b92b27;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+/* Expanded Question Content */
+.question-expanded-content {
+  border-top: 1px solid #eee;
+  background-color: #f8f9fa;
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Animation for expanding content */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+/* Expanded Question Content Inner */
+.expanded-question-content {
+  padding: 1.5rem;
+}
+
+/* Full Question Detail */
+.full-detail {
+  background: white;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #b92b27;
+}
+
+.full-detail h5 {
+  color: #b92b27;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.full-detail p {
+  line-height: 1.6;
+  color: #555;
+}
+
+/* Question Info Grid */
+.question-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.info-item {
+  background: white;
+  padding: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.9rem;
+}
+
+/* Question Actions */
+.question-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.collapse-btn, .share-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.collapse-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.collapse-btn:hover {
+  background-color: #5a6268;
+}
+
+.share-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.share-btn:hover {
+  background-color: #218838;
+}
+
+/* Loading States */
+.loading-state, .loading-question-details {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #b92b27;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Empty and Error States */
+.empty-state, .error-state {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+}
+
+.question-error {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* Instructions Text */
+.instructions {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 1.5rem;
+}
+
+/* Dummy Questions Section */
+.dummy-questions-section h3 {
+  color: #666;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+
+
+/* Dummy Question Card Section*/
+.question-card {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.question-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+.question-card h3 {
+  margin-bottom: 0.5rem;
+}
+.question-detail {
+  margin: 10px 0;
+}
+.question-card button {
+  margin-right: 10px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  background-color: #b92b27;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.question-card button:hover {
+  background-color: #8c1c1c;
+}
+
+/* Login Box */
+.right-login {
+  flex: 1;
+  min-width: 280px;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.right-login h2 {
+  margin-bottom: 1rem;
+}
+.right-login input {
+  width: 100%;
+  padding: 10px;
+  margin: 0.5rem 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+.right-login button {
+  width: 100%;
+  padding: 10px;
+  background-color: #b92b27;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.right-login button:hover {
+  background-color: #8c1c1c;
+}
+.no-results {
+  font-style: italic;
+  color: #777;
+  margin-top: 10px;
+}
+
+
+/* Responsive Layout */
+@media (max-width: 900px) {
+  .main-content {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  .navbar {
+    justify-content: space-around;
+    gap: 1rem;
+  }
+  /* ADDED: Mobile styles for click-to-expand questions */
+  .question-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+  
+  .question-info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .question-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+}
+
+
+
+
